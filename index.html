@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TailorFlow | Custom Tailoring Management Solution</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+:root{
+  /* TailorFlow Brand – Deep Navy + Slate Blue + Accent Blue */
+  --teal:#1B6FD8;
+  --teal-light:#4B96F5;
+  --teal-dim:#1357B2;
+  --teal-dark:#0E4494;
+
+  /* Dark Backgrounds */
+  --bg-black:#010B18;
+  --bg-deep:#020E20;
+  --bg-dark:#03112A;
+  --bg-card:#061832;
+
+  /* Navy Accents */
+  --navy:#081530;
+  --navy-mid:#0A1E4A;
+  --navy-light:#143268;
+  --navy-bright:#164CA4;
+  --blue-accent:#164CA4;
+  --blue-soft:#5B9FE8;
+  --blue-glow:rgba(22,76,164,0.15);
+
+  /* Light Sections */
+  --light-bg:#EDF2FA;
+  --light-card:#FFFFFF;
+  --light-border:#BAD5F5;
+  --text-dark:#020A1A;
+  --text-mid:#152A52;
+  --text-muted:#385070;
+
+  /* Text on Dark */
+  --white:#FFFFFF;
+  --txt-secondary:#7AACD8;
+  --txt-dim:#2C4462;
+
+  /* UI */
+  --card-bg:rgba(6,24,50,0.93);
+  --card-border:rgba(27,111,216,0.15);
+  --navy-card:rgba(8,21,48,0.8);
+  --navy-border:rgba(22,76,164,0.25);
+
+  --nav-h:72px;
+  --max-w:1200px;
+  --font:'Plus Jakarta Sans',sans-serif;
+  --display:'Sora',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --ease:cubic-bezier(0.4,0,0.2,1);
+  --ease-out:cubic-bezier(0,0,0.2,1);
+}
+
+body{font-family:var(--font);color:var(--white);background:var(--bg-black);overflow-x:hidden;}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg-black);}
+::-webkit-scrollbar-thumb{background:var(--teal);border-radius:2px;}
+
+img{display:block;max-width:100%;}
+
+/* ─── NAVBAR ─────────────────────────────────────────── */
+.navbar{
+  position:fixed;top:0;left:0;width:100%;height:var(--nav-h);
+  background:rgba(1,11,24,0.97);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(27,111,216,0.12);
+  z-index:1000;display:flex;align-items:center;
+  padding:0 clamp(16px,5vw,60px);
+  justify-content:space-between;
+  transition:border-color 0.3s;
+}
+.nav-logo{
+  font-family:var(--display);font-size:20px;font-weight:800;
+  color:var(--white);letter-spacing:-0.5px;
+  display:flex;align-items:center;gap:12px;
+  cursor:pointer;text-decoration:none;flex-shrink:0;
+}
+.nav-logo-icon{
+  width:42px;height:42px;
+  background:linear-gradient(135deg,var(--teal) 0%,var(--teal-dark) 100%);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 4px 16px rgba(27,111,216,0.35);
+  font-size:20px;
+}
+.nav-logo-text{display:flex;flex-direction:column;line-height:1;}
+.nav-logo-name{font-size:18px;font-weight:800;color:var(--white);}
+.nav-logo-name span{color:var(--teal);}
+.nav-logo-sub{font-size:9px;font-family:var(--mono);font-weight:500;color:var(--txt-secondary);letter-spacing:2.5px;text-transform:uppercase;margin-top:4px;}
+
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none;}
+.nav-links li button{
+  background:none;border:none;
+  color:var(--txt-secondary);
+  font-size:11px;font-weight:600;
+  padding:8px 16px;border-radius:7px;
+  transition:all 0.22s var(--ease);
+  cursor:pointer;font-family:var(--mono);
+  letter-spacing:0.8px;text-transform:uppercase;
+  position:relative;white-space:nowrap;
+}
+.nav-links li button:hover{color:var(--teal);background:rgba(27,111,216,0.06);}
+.nav-links li button.active{color:var(--teal);background:rgba(27,111,216,0.08);}
+.nav-links li button.active::after{
+  content:'';position:absolute;bottom:5px;left:50%;
+  transform:translateX(-50%);width:14px;height:2px;
+  background:var(--teal);border-radius:2px;
+}
+
+.nav-right{display:flex;align-items:center;gap:10px;}
+.btn-demo-nav{
+  background:linear-gradient(135deg,var(--teal),var(--teal-dark));
+  color:var(--white);border:none;padding:9px 20px;border-radius:8px;
+  font-size:11px;font-weight:700;cursor:pointer;
+  transition:all 0.22s;font-family:var(--mono);
+  letter-spacing:0.8px;text-transform:uppercase;white-space:nowrap;
+  box-shadow:0 2px 10px rgba(27,111,216,0.25);
+}
+.btn-demo-nav:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(27,111,216,0.45);}
+
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none;flex-shrink:0;}
+.hamburger span{width:22px;height:2px;background:var(--teal);border-radius:2px;transition:0.3s;display:block;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+.mobile-nav{
+  display:none;position:fixed;top:var(--nav-h);left:0;width:100%;
+  background:rgba(1,11,24,0.99);backdrop-filter:blur(20px);
+  padding:12px 20px 20px;flex-direction:column;gap:2px;
+  z-index:999;border-bottom:1px solid rgba(27,111,216,0.1);
+  animation:slideDown 0.25s var(--ease-out);
+}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+.mobile-nav.open{display:flex;}
+.mobile-nav button{
+  background:none;border:none;color:var(--txt-secondary);
+  font-size:13px;font-weight:600;padding:13px 12px;
+  border-bottom:1px solid rgba(27,111,216,0.06);
+  cursor:pointer;font-family:var(--mono);text-align:left;
+  text-transform:uppercase;letter-spacing:1px;
+  transition:color 0.2s,background 0.2s;border-radius:6px;
+}
+.mobile-nav button:hover{color:var(--teal);background:rgba(27,111,216,0.05);}
+.mobile-nav .mob-cta{
+  margin-top:8px;background:linear-gradient(135deg,var(--teal),var(--teal-dark));
+  color:var(--white);border:none;padding:13px;
+  border-radius:8px;font-weight:700;font-size:12px;
+  letter-spacing:1px;text-transform:uppercase;cursor:pointer;
+  font-family:var(--mono);
+}
+
+/* ─── PAGE SYSTEM ─────────────────────────────────────── */
+.page{display:none;min-height:100vh;padding-top:var(--nav-h);}
+.page.active{display:block;animation:pgIn 0.35s var(--ease);}
+@keyframes pgIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ─── SECTION COMMONS ─────────────────────────────────── */
+.label-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--teal);margin-bottom:14px;
+}
+.label-tag::before{content:'';width:20px;height:1px;background:var(--teal);}
+
+.label-tag-blue{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--blue-soft);margin-bottom:14px;
+}
+.label-tag-blue::before{content:'';width:20px;height:1px;background:var(--blue-soft);}
+
+.section-h2{
+  font-family:var(--display);font-size:clamp(28px,3.5vw,52px);
+  font-weight:800;line-height:1.1;letter-spacing:-0.8px;
+  margin-bottom:10px;
+}
+.section-h2.teal{color:var(--teal);}
+.section-h2.dark{color:var(--text-dark);}
+.section-h2.white{color:var(--white);}
+
+.section-divider{width:56px;height:3px;margin:16px 0 28px;border-radius:2px;}
+.divider-teal{background:linear-gradient(90deg,var(--teal),transparent);}
+.divider-blue{background:linear-gradient(90deg,var(--blue-accent),transparent);}
+.divider-center{margin:16px auto 28px;}
+
+.para-dark{color:var(--txt-secondary);line-height:1.85;font-size:17px;}
+.para-light{color:var(--text-mid);line-height:1.85;font-size:17px;}
+
+.container{max-width:var(--max-w);margin:0 auto;padding:0 clamp(16px,4vw,60px);}
+
+/* ─── BUTTONS ─────────────────────────────────────────── */
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,var(--teal),var(--teal-dark));
+  color:var(--white);padding:13px 28px;border-radius:8px;
+  text-decoration:none;font-weight:700;font-size:12px;
+  letter-spacing:0.8px;text-transform:uppercase;
+  transition:all 0.25s;font-family:var(--mono);border:none;cursor:pointer;
+  box-shadow:0 4px 16px rgba(27,111,216,0.28);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(27,111,216,0.45);}
+
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1.5px solid rgba(27,111,216,0.4);color:var(--teal);
+  padding:12px 28px;border-radius:8px;text-decoration:none;
+  font-weight:700;font-size:12px;letter-spacing:0.8px;
+  text-transform:uppercase;transition:all 0.25s;
+  font-family:var(--mono);background:none;cursor:pointer;
+}
+.btn-secondary:hover{background:rgba(27,111,216,0.07);border-color:var(--teal);}
+
+.btn-blue{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--blue-accent);color:var(--white);
+  padding:12px 28px;border-radius:8px;
+  font-weight:700;font-size:12px;letter-spacing:0.8px;
+  text-transform:uppercase;transition:all 0.25s;
+  font-family:var(--mono);border:none;cursor:pointer;
+  box-shadow:0 4px 16px rgba(22,76,164,0.3);
+}
+.btn-blue:hover{transform:translateY(-2px);background:#103A84;box-shadow:0 8px 28px rgba(22,76,164,0.45);}
+
+/* ─── BADGES ─────────────────────────────────────────── */
+.risk-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 10px;border-radius:20px;
+  font-size:10px;font-weight:700;font-family:var(--mono);letter-spacing:0.5px;
+}
+.risk-teal{background:rgba(27,111,216,0.12);color:var(--teal);border:1px solid rgba(27,111,216,0.3);}
+.risk-amber{background:rgba(255,186,0,0.12);color:#F5A623;border:1px solid rgba(255,186,0,0.25);}
+.risk-red{background:rgba(239,68,68,0.12);color:#EF4444;border:1px solid rgba(239,68,68,0.25);}
+.risk-blue{background:rgba(91,159,232,0.12);color:var(--blue-soft);border:1px solid rgba(91,159,232,0.25);}
+.risk-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+
+/* ─── HERO ──────────────────────────────────────────────── */
+.hero{
+  position:relative;
+  padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,90px);
+  background:var(--bg-black);overflow:hidden;
+  min-height:calc(100vh - var(--nav-h));
+  display:flex;align-items:center;
+}
+.hero-noise{
+  position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;
+}
+.hero-grid-bg{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(27,111,216,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(27,111,216,0.04) 1px,transparent 1px);
+  background-size:50px 50px;
+  pointer-events:none;z-index:0;
+}
+.hero-glow-1{
+  position:absolute;top:-200px;right:-100px;
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(27,111,216,0.08) 0%,transparent 65%);
+  pointer-events:none;z-index:0;
+}
+.hero-glow-2{
+  position:absolute;bottom:-150px;left:-100px;
+  width:500px;height:500px;
+  background:radial-gradient(circle,rgba(22,76,164,0.09) 0%,transparent 65%);
+  pointer-events:none;z-index:0;
+}
+.hero-inner{
+  max-width:var(--max-w);margin:0 auto;
+  padding:0 clamp(16px,4vw,60px);
+  display:grid;grid-template-columns:1.15fr 0.85fr;
+  gap:clamp(30px,5vw,80px);align-items:center;
+  position:relative;z-index:1;width:100%;
+}
+
+
+.score-card{
+  width:320px;
+  background:#061832;
+  border:1px solid rgba(27,111,216,0.2);
+  border-radius:18px;
+  padding:28px;
+  color:#fff;
+  font-family:Arial,sans-serif;
+}
+
+.score-card-label{
+  font-size:11px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:#4B96F5;
+  margin-bottom:24px;
+}
+
+/* PIE GRAPH */
+.pie-wrap{
+  display:flex;
+  justify-content:center;
+  margin-bottom:30px;
+}
+
+.pie-chart{
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  background:
+  conic-gradient(
+    #1B6FD8 0% 95%,
+    rgba(255,255,255,0.08) 95% 100%
+  );
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+}
+
+.pie-chart::before{
+  content:'';
+  position:absolute;
+  width:110px;
+  height:110px;
+  background:#061832;
+  border-radius:50%;
+}
+
+.pie-center{
+  position:relative;
+  z-index:2;
+  text-align:center;
+}
+
+.pie-center span{
+  display:block;
+  font-size:34px;
+  font-weight:800;
+  color:#fff;
+}
+
+.pie-center small{
+  color:#7AACD8;
+  font-size:11px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+/* ROWS */
+.score-row{
+  display:flex;
+  justify-content:space-between;
+  padding:12px 0;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+
+.score-lbl{
+  color:#7AACD8;
+  font-size:13px;
+}
+
+.score-val{
+  color:#fff;
+  font-weight:700;
+  font-size:14px;
+}
+
+
+.hero-badge{
+  display:inline-flex;align-items:center;gap:9px;
+  background:rgba(27,111,216,0.07);
+  border:1px solid rgba(27,111,216,0.28);
+  color:var(--teal);font-size:10px;font-weight:700;
+  letter-spacing:2.5px;padding:6px 14px 6px 10px;
+  border-radius:4px;text-transform:uppercase;
+  margin-bottom:20px;font-family:var(--mono);
+}
+.hero-badge-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--teal);
+  animation:pulse-dot 1.6s ease-in-out infinite;flex-shrink:0;
+}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.35;transform:scale(0.55);}}
+
+.hero h1{
+  font-family:var(--display);
+  font-size:clamp(38px,4.5vw,68px);
+  line-height:1.06;font-weight:800;
+  letter-spacing:-1.5px;color:var(--white);
+  margin-bottom:10px;
+}
+.hero h1 .teal{color:var(--teal);}
+.hero h1 .blue{color:var(--blue-soft);}
+
+.hero-rule{
+  width:64px;height:3px;
+  background:linear-gradient(90deg,var(--teal),rgba(22,76,164,0.6));
+  margin:20px 0 24px;border-radius:2px;
+}
+.hero-body{
+  color:var(--txt-secondary);font-size:clamp(14px,1.5vw,19px);
+  line-height:1.8;margin-bottom:36px;max-width:540px;
+}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
+
+/* Score Card */
+.score-card{
+  background:linear-gradient(145deg,rgba(6,24,50,0.95),rgba(2,10,28,0.98));
+  border:1px solid rgba(27,111,216,0.2);border-radius:18px;
+  padding:32px;position:relative;overflow:hidden;
+  box-shadow:0 24px 70px rgba(0,0,0,0.55),0 0 0 1px rgba(27,111,216,0.05);
+}
+.score-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--teal),var(--blue-accent),transparent);
+}
+.score-card-label{
+  font-family:var(--mono);color:var(--teal);
+  font-size:9px;letter-spacing:3px;text-transform:uppercase;margin-bottom:20px;
+  display:flex;align-items:center;gap:8px;
+}
+.score-card-label::after{content:'';flex:1;height:1px;background:rgba(27,111,216,0.15);}
+.score-row{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 0;border-bottom:1px solid rgba(255,255,255,0.04);
+}
+.score-row:last-child{border-bottom:none;padding-bottom:0;}
+.score-icon{
+  width:30px;height:30px;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:14px;
+}
+.score-icon.teal-bg{background:rgba(27,111,216,0.1);border:1px solid rgba(27,111,216,0.2);}
+.score-icon.blue-bg{background:rgba(22,76,164,0.1);border:1px solid rgba(22,76,164,0.2);}
+.score-icon.amber-bg{background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.2);}
+.score-lbl{color:var(--txt-secondary);font-size:13px;flex:1;font-weight:500;}
+.score-val{
+  font-family:var(--display);color:var(--white);
+  font-size:17px;font-weight:700;
+  display:flex;align-items:center;gap:8px;
+}
+.score-big{
+  margin-top:20px;padding-top:20px;
+  border-top:1px solid rgba(255,255,255,0.06);
+  display:flex;align-items:center;gap:20px;
+}
+.score-big-num{
+  font-family:var(--display);font-size:clamp(40px,4vw,54px);
+  font-weight:800;color:var(--teal);line-height:1;
+}
+.score-big-info .label{
+  font-family:var(--display);color:var(--white);font-size:15px;font-weight:700;margin-bottom:4px;
+}
+.score-big-info .sub{color:var(--txt-secondary);font-size:11px;font-family:var(--mono);}
+
+/* ─── STATS STRIP ──────────────────────────────────── */
+.stats-strip{
+  background:linear-gradient(180deg,rgba(6,24,50,0.9) 0%,rgba(8,21,48,0.95) 100%);
+  border-top:1px solid rgba(27,111,216,0.1);
+  border-bottom:1px solid rgba(27,111,216,0.1);
+  padding:clamp(30px,4vw,50px) 0;
+}
+.stats-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:clamp(20px,3vw,40px);text-align:center;
+}
+.stat-blk{padding:0 10px;}
+.stat-num{
+  font-family:var(--display);font-size:clamp(30px,3.5vw,46px);
+  font-weight:800;color:var(--teal);display:block;margin-bottom:6px;
+}
+.stat-txt{color:var(--white);font-size:14px;font-weight:600;margin-bottom:4px;line-height:1.4;}
+.stat-source{font-family:var(--mono);font-size:10px;color:var(--txt-dim);letter-spacing:0.5px;}
+
+/* ─── SECTION LIGHT ──────────────────────────────────── */
+.section-light{
+  background:var(--light-bg);
+  padding:clamp(60px,8vw,100px) 0;
+}
+.section-dark{
+  background:var(--bg-deep);
+  padding:clamp(60px,8vw,100px) 0;
+}
+.section-navy{
+  background:var(--bg-dark);
+  padding:clamp(60px,8vw,100px) 0;
+}
+
+/* ─── PROCESS / HOW IT WORKS ──────────────────────────── */
+.process-intro{max-width:700px;margin-bottom:clamp(36px,5vw,60px);}
+.process-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:clamp(16px,2vw,26px);
+}
+.process-card{
+  background:var(--light-card);border-radius:14px;overflow:hidden;
+  box-shadow:0 4px 28px rgba(22,76,164,0.1);
+  border:1px solid var(--light-border);
+  transition:transform 0.25s var(--ease),box-shadow 0.25s;
+}
+.process-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(22,76,164,0.18);}
+.process-card-img{
+  height:160px;overflow:hidden;position:relative;
+  background:linear-gradient(135deg,#E8F0FB,#D0E4F8);
+  display:flex;align-items:center;justify-content:center;
+}
+.process-card-img img{width:100%;height:100%;object-fit:cover;}
+.process-card-img-placeholder{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  font-size:40px;
+  background:linear-gradient(135deg,rgba(27,111,216,0.08),rgba(22,76,164,0.12));
+}
+.process-card-body{padding:22px 20px 24px;}
+.step-tag{
+  font-family:var(--mono);font-size:9px;font-weight:700;
+  color:var(--teal);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;
+}
+.process-card-body h3{
+  font-family:var(--display);color:var(--text-dark);
+  font-size:17px;font-weight:800;margin-bottom:8px;
+}
+.process-card-body p{color:var(--text-muted);font-size:13px;line-height:1.7;}
+
+/* ─── PLATFORM GRID ──────────────────────────────────── */
+.platform-sub{margin-bottom:clamp(30px,4vw,50px);max-width:760px;}
+.platform-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:clamp(16px,2.5vw,28px);
+}
+.platform-card{
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:16px;overflow:hidden;position:relative;
+  transition:border-color 0.3s,box-shadow 0.3s;
+}
+.platform-card:hover{border-color:rgba(27,111,216,0.3);box-shadow:0 12px 40px rgba(27,111,216,0.1);}
+.platform-card-img{
+  height:160px;overflow:hidden;position:relative;
+  background:linear-gradient(135deg,rgba(8,21,48,0.8),rgba(6,24,50,0.9));
+  display:flex;align-items:center;justify-content:center;
+}
+.platform-card-img img{width:100%;height:100%;object-fit:cover;opacity:0.85;}
+.platform-card-img-placeholder{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  font-size:40px;
+}
+.platform-card .inner{padding:24px 22px 26px;}
+.element-badge{
+  font-family:var(--mono);font-size:9px;font-weight:700;
+  color:var(--teal);letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:8px;
+}
+.platform-card h3{
+  font-family:var(--display);color:var(--white);
+  font-size:17px;font-weight:800;margin-bottom:8px;
+}
+.platform-card p{color:var(--txt-secondary);font-size:13.5px;line-height:1.7;margin-bottom:12px;}
+.more-text{
+  color:var(--txt-secondary);font-size:13px;line-height:1.7;
+  max-height:0;overflow:hidden;
+  transition:max-height 0.4s var(--ease),opacity 0.4s;
+  opacity:0;
+}
+.platform-card.open .more-text{max-height:200px;opacity:1;}
+.expand-btn{
+  background:none;border:1px solid rgba(27,111,216,0.25);color:var(--teal);
+  font-size:11px;font-weight:700;padding:7px 14px;border-radius:6px;
+  cursor:pointer;font-family:var(--mono);letter-spacing:0.5px;
+  transition:all 0.2s;
+}
+.expand-btn:hover{background:rgba(27,111,216,0.07);}
+
+/* ─── ABOUT ─────────────────────────────────────────── */
+.about-hero{
+  background:var(--bg-black);padding:clamp(60px,8vw,100px) 0;
+  border-bottom:1px solid rgba(27,111,216,0.08);
+}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,80px);align-items:start;}
+.about-para{color:var(--txt-secondary);font-size:15.5px;line-height:1.8;margin-bottom:18px;}
+.about-tags{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:28px;}
+.feature-tag{
+  background:rgba(27,111,216,0.06);border:1px solid rgba(27,111,216,0.18);
+  border-radius:8px;padding:10px 14px;font-family:var(--mono);
+  font-size:10px;font-weight:600;color:var(--teal);
+  letter-spacing:0.8px;text-transform:uppercase;
+}
+.founder-card{
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:14px;padding:28px;margin-bottom:20px;
+  position:relative;overflow:hidden;
+}
+.founder-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--teal),var(--blue-accent),transparent);
+}
+.founder-tag{
+  font-family:var(--mono);font-size:9px;font-weight:700;
+  color:var(--teal);letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:10px;
+}
+.founder-card h4{font-family:var(--display);color:var(--white);font-size:22px;font-weight:800;margin-bottom:4px;}
+.founder-title{color:var(--txt-secondary);font-size:12px;font-family:var(--mono);margin-bottom:16px;}
+.founder-card p{color:var(--txt-secondary);font-size:14px;line-height:1.75;margin-bottom:14px;}
+
+/* ─── KPI ROW ─────────────────────────────────────────── */
+.kpi-row{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:clamp(14px,2vw,24px);margin-bottom:44px;
+}
+.kpi-card{
+  background:linear-gradient(145deg,rgba(27,111,216,0.05),rgba(22,76,164,0.06));
+  border:1px solid rgba(27,111,216,0.15);border-radius:12px;
+  padding:22px 18px;text-align:center;
+}
+.kpi-num{
+  font-family:var(--display);font-size:clamp(26px,3vw,36px);
+  font-weight:800;color:var(--teal);margin-bottom:6px;
+}
+.kpi-lbl{color:var(--txt-secondary);font-size:12px;line-height:1.5;font-family:var(--mono);}
+
+/* ─── MARKET CHARTS ───────────────────────────────────── */
+.market-kpi{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:clamp(16px,2.5vw,28px);margin-bottom:44px;
+}
+.mkt-card{
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:14px;padding:28px 24px;
+}
+.mkt-num{
+  font-family:var(--display);font-size:clamp(32px,4vw,44px);
+  font-weight:800;color:var(--teal);line-height:1;margin-bottom:10px;
+}
+.mkt-lbl{color:var(--txt-secondary);font-size:14px;line-height:1.7;margin-bottom:10px;}
+.mkt-source{font-family:var(--mono);font-size:10px;color:var(--txt-dim);letter-spacing:0.5px;}
+.charts-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:clamp(16px,2.5vw,28px);margin-bottom:28px;
+}
+.chart-card{
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:14px;padding:24px;
+}
+.chart-card-full{
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:14px;padding:24px;margin-bottom:28px;
+}
+.chart-title{
+  font-family:var(--display);color:var(--white);
+  font-size:16px;font-weight:700;margin-bottom:4px;
+}
+.chart-sub{color:var(--txt-secondary);font-size:12px;font-family:var(--mono);margin-bottom:18px;}
+.chart-wrap{height:240px;position:relative;}
+.chart-wrap-lg{height:360px;position:relative;}
+
+/* ─── PRICING ─────────────────────────────────────────── */
+.pricing-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:clamp(16px,2.5vw,28px);margin-bottom:64px;
+  align-items:start;
+}
+.price-card{
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:16px;padding:32px 28px;position:relative;
+}
+.price-card.featured{
+  border-color:rgba(27,111,216,0.4);
+  box-shadow:0 0 0 1px rgba(27,111,216,0.15),0 20px 60px rgba(27,111,216,0.12);
+}
+.price-card.featured::before{
+  content:'MOST POPULAR';position:absolute;top:-1px;left:50%;
+  transform:translateX(-50%);
+  background:linear-gradient(90deg,var(--teal),var(--teal-dark));
+  color:var(--white);font-family:var(--mono);font-size:9px;font-weight:700;
+  letter-spacing:2px;padding:5px 16px;border-radius:0 0 8px 8px;
+}
+.price-tier{
+  font-family:var(--mono);font-size:9px;font-weight:700;
+  color:var(--teal);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:10px;
+}
+.price-card h3{
+  font-family:var(--display);color:var(--white);
+  font-size:22px;font-weight:800;margin-bottom:8px;
+}
+.price-card .desc{color:var(--txt-secondary);font-size:13px;line-height:1.65;margin-bottom:20px;}
+.price-amount{
+  font-family:var(--display);color:var(--white);
+  font-size:48px;font-weight:800;line-height:1;
+}
+.price-amount span{font-size:22px;}
+.price-period{
+  font-family:var(--mono);color:var(--txt-dim);
+  font-size:10px;letter-spacing:1px;margin-top:4px;margin-bottom:20px;
+}
+.price-divider{height:1px;background:rgba(27,111,216,0.1);margin-bottom:20px;}
+.price-features{list-style:none;margin-bottom:28px;}
+.price-features li{
+  display:flex;align-items:flex-start;gap:10px;
+  color:var(--txt-secondary);font-size:13.5px;
+  padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);
+}
+.price-features li:last-child{border-bottom:none;}
+.chk{color:var(--teal);font-size:14px;flex-shrink:0;margin-top:1px;}
+.price-btn{
+  width:100%;padding:13px;border-radius:8px;
+  font-family:var(--mono);font-size:11px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;cursor:pointer;
+  transition:all 0.25s;border:none;
+}
+.price-btn-teal{
+  background:linear-gradient(135deg,var(--teal),var(--teal-dark));
+  color:var(--white);
+  box-shadow:0 4px 16px rgba(27,111,216,0.3);
+}
+.price-btn-teal:hover{box-shadow:0 8px 28px rgba(27,111,216,0.45);transform:translateY(-1px);}
+.price-btn-outline{
+  background:none;color:var(--teal);
+  border:1.5px solid rgba(27,111,216,0.35);
+}
+.price-btn-outline:hover{background:rgba(27,111,216,0.07);}
+
+/* ─── FAQ ────────────────────────────────────────────── */
+.faq-wrap{max-width:780px;margin-bottom:24px;}
+.faq-item{border-bottom:1px solid rgba(27,111,216,0.08);}
+.faq-q{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:20px 0;cursor:pointer;gap:16px;
+}
+.faq-q h4{
+  font-family:var(--display);color:var(--white);
+  font-size:15px;font-weight:700;line-height:1.4;
+}
+.faq-icon{
+  flex-shrink:0;width:28px;height:28px;border-radius:50%;
+  background:rgba(27,111,216,0.08);border:1px solid rgba(27,111,216,0.2);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--teal);font-size:16px;font-weight:400;
+  transition:transform 0.3s;
+}
+.faq-item.open .faq-icon{transform:rotate(45deg);}
+.faq-body{
+  color:var(--txt-secondary);font-size:14.5px;line-height:1.75;
+  max-height:0;overflow:hidden;
+  transition:max-height 0.35s var(--ease),padding 0.35s;
+}
+.faq-item.open .faq-body{max-height:300px;padding-top:14px;}
+
+/* ─── CONTACT ─────────────────────────────────────────── */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,80px);align-items:start;}
+.contact-left-para{color:var(--txt-secondary);font-size:15px;line-height:1.75;margin-bottom:16px;}
+.contact-item{display:flex;align-items:flex-start;gap:14px;margin-bottom:18px;}
+.contact-icon{
+  width:40px;height:40px;background:rgba(27,111,216,0.08);
+  border:1px solid rgba(27,111,216,0.2);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.contact-item-text strong{display:block;color:var(--white);font-size:13px;margin-bottom:2px;}
+.contact-item-text span{color:var(--txt-secondary);font-size:13px;}
+.contact-form-card{
+  background:var(--card-bg);border:1px solid rgba(27,111,216,0.15);
+  border-radius:16px;padding:36px;position:relative;overflow:hidden;
+}
+.contact-form-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--teal),var(--blue-accent),transparent);
+}
+.contact-form-card h3{font-family:var(--display);color:var(--white);font-size:22px;font-weight:800;margin-bottom:24px;}
+.form-group{margin-bottom:18px;}
+.form-label{display:block;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--txt-dim);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;}
+.form-ctrl{
+  width:100%;background:rgba(255,255,255,0.04);
+  border:1px solid rgba(27,111,216,0.2);border-radius:8px;
+  padding:12px 16px;color:var(--white);font-size:14px;
+  font-family:var(--font);transition:all 0.25s;outline:none;
+}
+.form-ctrl::placeholder{color:var(--txt-dim);}
+.form-ctrl:focus{border-color:rgba(27,111,216,0.5);background:rgba(27,111,216,0.03);}
+.form-ctrl option{background:var(--bg-card);}
+.ta{resize:vertical;min-height:90px;}
+.form-submit{
+  width:100%;background:linear-gradient(135deg,var(--teal),var(--teal-dark));
+  color:var(--white);border:none;padding:14px;border-radius:8px;
+  font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;cursor:pointer;transition:all 0.25s;
+}
+.form-submit:hover{box-shadow:0 6px 20px rgba(27,111,216,0.38);transform:translateY(-1px);}
+
+/* ─── FOOTER ──────────────────────────────────────────── */
+footer{background:var(--bg-black);border-top:1px solid rgba(27,111,216,0.1);padding:clamp(40px,6vw,80px) 0 28px;}
+.footer-inner{max-width:var(--max-w);margin:0 auto;padding:0 clamp(16px,4vw,60px);}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:clamp(30px,5vw,80px);margin-bottom:40px;}
+.footer-logo{font-family:var(--display);color:var(--teal);font-size:20px;font-weight:800;display:block;margin-bottom:14px;}
+.footer-brand p{color:var(--txt-dim);font-size:13px;line-height:1.75;}
+.footer-col h5{font-family:var(--mono);color:var(--white);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:14px;}
+.footer-col a{display:block;color:var(--txt-dim);font-size:13px;margin-bottom:10px;cursor:pointer;transition:color 0.2s;}
+.footer-col a:hover{color:var(--teal);}
+.footer-bottom{border-top:1px solid rgba(27,111,216,0.08);padding-top:20px;display:flex;flex-direction:column;gap:4px;}
+.footer-bottom p{color:var(--txt-dim);font-size:12px;font-family:var(--mono);}
+.footer-bottom span{color:var(--teal);}
+
+/* ─── RESPONSIVE ──────────────────────────────────────── */
+@media(min-width:1400px){
+  :root{--max-w:1300px;}
+  .hero h1{font-size:72px;}
+  .hero-body{font-size:20px;max-width:580px;}
+  .section-h2{font-size:54px;}
+  .para-dark,.para-light{font-size:18px;}
+  .stat-num{font-size:46px;}
+  .process-card-img{height:180px;}
+  .platform-card-img{height:200px;}
+  .chart-wrap{height:300px;}
+  .chart-wrap-lg{height:420px;}
+  .score-big-num{font-size:52px;}
+}
+@media(max-width:900px){
+  .platform-grid{grid-template-columns:repeat(2,1fr);}
+  .pricing-grid{grid-template-columns:1fr 1fr;}
+  .kpi-row{grid-template-columns:repeat(2,1fr);}
+  .market-kpi{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:768px){
+  .nav-links,.nav-right .btn-demo-nav{display:none;}
+  .hamburger{display:flex;}
+  .nav-right{gap:0;}
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-inner>div:last-child{display:none;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .process-grid{grid-template-columns:repeat(2,1fr);}
+  .platform-grid{grid-template-columns:1fr;}
+  .about-grid{grid-template-columns:1fr;}
+  .kpi-row{grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:28px;}
+  .kpi-card{padding:16px 12px;}
+  .charts-grid{grid-template-columns:1fr;gap:16px;margin-bottom:16px;}
+  .chart-card{padding:16px;}
+  .chart-card-full{padding:16px;margin-bottom:16px;}
+  .chart-wrap{height:200px;}
+  .chart-wrap-lg{height:260px;}
+  .pricing-grid{grid-template-columns:1fr;}
+  .contact-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr;}
+  .market-kpi{grid-template-columns:1fr;}
+}
+@media(max-width:480px){
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .process-grid{grid-template-columns:1fr;}
+  .kpi-row{grid-template-columns:1fr;}
+  .about-tags{grid-template-columns:1fr;}
+  .chart-wrap{height:180px;}
+  .chart-wrap-lg{height:220px;}
+  .chart-title{font-size:14px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ NAVBAR ═══════════ -->
+<nav class="navbar">
+  <a class="nav-logo" href="#" onclick="showPage('home');return false;">
+    
+    <!-- Removed Logo Icon -->
+
+    <div class="nav-logo-text">
+      <span class="nav-logo-name">Tailor<span>flow</span></span>
+      <span class="nav-logo-sub">Fit-as-a-Service · UK</span>
+    </div>
+  </a>
+
+  <ul class="nav-links">
+    <li><button id="nav-home" class="active" onclick="showPage('home')">Home</button></li>
+    <li><button id="nav-about" onclick="showPage('about')">About</button></li>
+    <li><button id="nav-platform" onclick="showPage('platform')">Platform</button></li>
+    <li><button id="nav-market" onclick="showPage('market')">Market</button></li>
+    <li><button id="nav-pricing" onclick="showPage('pricing')">Pricing</button></li>
+    <li><button id="nav-contact" onclick="showPage('contact')">Contact</button></li>
+  </ul>
+
+  <div class="nav-right">
+    <button class="btn-demo-nav" onclick="showPage('contact')">Book a Demo</button>
+
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobileNav">
+  <button onclick="showPage('home');closeMobile()">Home</button>
+  <button onclick="showPage('about');closeMobile()">About</button>
+  <button onclick="showPage('platform');closeMobile()">Platform</button>
+  <button onclick="showPage('market');closeMobile()">Market</button>
+  <button onclick="showPage('pricing');closeMobile()">Pricing</button>
+  <button onclick="showPage('contact');closeMobile()">Contact</button>
+  <button class="mob-cta" onclick="showPage('contact');closeMobile()">Book a Demo →</button>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE: HOME
+═══════════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-noise"></div>
+    <div class="hero-grid-bg"></div>
+    <div class="hero-glow-1"></div>
+    <div class="hero-glow-2"></div>
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          UK's First B2B Fashion-Operations Middleware
+        </div>
+        <h1>Intercept. <span class="teal">Alter.</span><br><span class="blue">Deliver.</span></h1>
+        <div class="hero-rule"></div>
+        <p class="hero-body">TailorFlow fixes garment fit before it ships  intercepting e-commerce orders at checkout, enabling proactive pre-delivery alterations that turn potential refunds into finalized, custom-fit sales. Solving the UK's £25.1 billion returns crisis with Fit-as-a-Service infrastructure.</p>
+        <div class="hero-btns">
+          <button class="btn-primary" onclick="showPage('contact')">Book a Demo →</button>
+          <button class="btn-secondary" onclick="showPage('platform')">Explore Platform</button>
+        </div>
+      </div>
+      <div>
+        <div class="score-card">
+
+  <div class="score-card-label">Live Fit Orchestration Monitor</div>
+
+  <!-- PIE GRAPH -->
+  <div class="pie-wrap">
+    <div class="pie-chart">
+      <div class="pie-center">
+        <span>95%</span>
+        <small>Accuracy</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATA ROWS -->
+  <div class="score-row">
+    <span class="score-lbl">Orders Intercepted Today</span>
+    <span class="score-val">1,247</span>
+  </div>
+
+  <div class="score-row">
+    <span class="score-lbl">Returns Prevented This Week</span>
+    <span class="score-val">£18,400</span>
+  </div>
+
+  <div class="score-row">
+    <span class="score-lbl">Active Alteration Jobs</span>
+    <span class="score-val">84</span>
+  </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS STRIP -->
+  <div class="stats-strip">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-blk">
+          <span class="stat-num">£25.1B</span>
+          <div class="stat-txt">UK Annual Returns Crisis</div>
+          <div class="stat-source">Non-food returns · 2025 forecast</div>
+        </div>
+        <div class="stat-blk">
+          <span class="stat-num">93%</span>
+          <div class="stat-txt">Returns Are Fit-Related</div>
+          <div class="stat-source">UK Fashion Returns Research</div>
+        </div>
+        <div class="stat-blk">
+          <span class="stat-num">62%</span>
+          <div class="stat-txt">UK Shoppers "Bracket" Sizes</div>
+          <div class="stat-source">69% for Gen Z · UK Research</div>
+        </div>
+        <div class="stat-blk">
+          <span class="stat-num">40%</span>
+          <div class="stat-txt">Bracketing Reduction in Pilots</div>
+          <div class="stat-source">TailorFlow London Cluster</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS (Process Section) -->
+  <section class="section-light">
+    <div class="container">
+      <div class="process-intro">
+        <div class="label-tag-blue">How It Works</div>
+        <h2 class="section-h2 dark">From Checkout Intent to Ready-to-Wear Delivery in 24–48 Hours</h2>
+        <div class="section-divider divider-blue"></div>
+        <p class="para-light">Every TailorFlow deployment follows a four-stage fit orchestration journey  from checkout capture and semantic translation, to pre-dispatch modification at a vetted micro-hub, to final "Ready-to-Wear" delivery  all without disrupting the merchant's existing e-commerce stack or adding friction to the checkout funnel.</p>
+      </div>
+      <div class="process-grid">
+
+        <!-- STEP 01 -->
+        <div class="process-card">
+          <div class="process-card-img">
+            <img src="t1.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:0;"
+              onerror="this.style.display='none';this.parentNode.querySelector('.process-card-img-placeholder').style.display='flex'">
+            <div class="process-card-img-placeholder" style="display:none;">🛒</div>
+          </div>
+          <div class="process-card-body">
+            <div class="step-tag">STEP 01</div>
+            <h3>Capture at Checkout</h3>
+            <p>The Checkout-to-Stitch Orchestration Layer (CSOL) captures customer fit preferences directly within Shopify or WooCommerce checkout  hemming, waist taper, sleeve shortening  as structured order metadata.</p>
+          </div>
+        </div>
+
+        <!-- STEP 02 -->
+        <div class="process-card">
+          <div class="process-card-img">
+            <img src="t2.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:0;"
+              onerror="this.style.display='none';this.parentNode.querySelector('.process-card-img-placeholder').style.display='flex'">
+            <div class="process-card-img-placeholder" style="display:none;">🤖</div>
+          </div>
+          <div class="process-card-body">
+            <div class="step-tag">STEP 02</div>
+            <h3>Translate &amp; Standardise</h3>
+            <p>The AITE Semantic Engine normalises vague customer language like "shorten for a petite fit" into precise technical job sheets  e.g., "Hem: -4.5cm; blind stitch finish"  with 95% mapping accuracy.</p>
+          </div>
+        </div>
+
+        <!-- STEP 03 -->
+        <div class="process-card">
+          <div class="process-card-img">
+            <img src="t3.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:0;"
+              onerror="this.style.display='none';this.parentNode.querySelector('.process-card-img-placeholder').style.display='flex'">
+            <div class="process-card-img-placeholder" style="display:none;">⚙️</div>
+          </div>
+          <div class="process-card-body">
+            <div class="step-tag">STEP 03</div>
+            <h3>Route &amp; Alter</h3>
+            <p>The Pre-Dispatch Modification Buffer intercepts the garment between "Pick" and "Dispatch" stages, routing it to the nearest certified tailoring micro-hub for completion within the SLA window.</p>
+          </div>
+        </div>
+
+        <!-- STEP 04 -->
+        <div class="process-card">
+          <div class="process-card-img">
+            <img src="t4.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:0;"
+              onerror="this.style.display='none';this.parentNode.querySelector('.process-card-img-placeholder').style.display='flex'">
+            <div class="process-card-img-placeholder" style="display:none;">✅</div>
+          </div>
+          <div class="process-card-body">
+            <div class="step-tag">STEP 04</div>
+            <h3>Verify &amp; Deliver</h3>
+            <p>Digital QA evidence is captured pre/post modification. The garment is dispatched as a "Ready-to-Wear" item while Fit Intelligence data feeds back to the merchant's design team to prevent future returns.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CORE CAPABILITIES -->
+  <section class="section-dark">
+    <div class="container">
+      <div class="label-tag">Core Platform</div>
+      <h2 class="section-h2 white">Five Proprietary Modules. One Fit Orchestration Infrastructure.</h2>
+      <div class="section-divider divider-teal"></div>
+      <p class="para-dark platform-sub">TailorFlow combines five proprietary orchestration modules into a single fashion-operations middleware  the only platform that unifies Checkout Capture, Semantic Translation, Pre-Dispatch Routing, Digital QA, and Fit Intelligence into one proactive "Return Prevention" system for D2C brands, multicultural retailers, and luxury boutiques.</p>
+
+      <div class="platform-grid">
+
+        <!-- MODULE 01 -->
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <img src="t5.jpg" style="width:100%;height:100%;object-fit:cover;"
+              onerror="this.style.display='none';this.parentNode.querySelector('.platform-card-img-placeholder').style.display='flex'">
+            <div class="platform-card-img-placeholder" style="display:none;">🧠</div>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 01</div>
+            <h3>CSOL Checkout Engine</h3>
+            <p>Transaction-integrated framework that captures fit adjustments at the point of purchase, transforming customer intent into structured tailoring instructions in sub-200ms.</p>
+            <div class="more-text">Unlike separate booking funnels, CSOL embeds the modification trigger directly within the merchant's ordering logic  maintaining checkout conversion rates while capturing every alteration request with 100% technical fidelity.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More ↓</button>
+          </div>
+        </div>
+
+        <!-- MODULE 02 -->
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <img src="t6.jpg" style="width:100%;height:100%;object-fit:cover;"
+              onerror="this.style.display='none';this.parentNode.querySelector('.platform-card-img-placeholder').style.display='flex'">
+            <div class="platform-card-img-placeholder" style="display:none;">🔤</div>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 02</div>
+            <h3>AITE Semantic Engine</h3>
+            <p>Machine learning layer that converts ambiguous customer language into quantified, workshop-compatible parameters with 95% accuracy across 10+ garment categories.</p>
+            <div class="more-text">The engine understands garment construction rules  automatically validating requests to ensure they don't interfere with structural elements like zippers or vents, eliminating rework and craftsmanship disputes.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More ↓</button>
+          </div>
+        </div>
+
+        <!-- MODULE 03 -->
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <img src="t7.jpg" style="width:100%;height:100%;object-fit:cover;"
+              onerror="this.style.display='none';this.parentNode.querySelector('.platform-card-img-placeholder').style.display='flex'">
+            <div class="platform-card-img-placeholder" style="display:none;">⚡</div>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 03</div>
+            <h3>Pre-Dispatch Buffer</h3>
+            <p>Upstream intervention model that intercepts garments between "Pick" and "Dispatch" stages, routing them to certified micro-hubs before first-mile delivery.</p>
+            <div class="more-text">The Modification Buffer is designed for high-volume retail  ensuring compliance with e-commerce speed expectations (24–48h SLA) while preventing the 4.2kg of CO₂ generated by redundant return trips.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More ↓</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</div><!-- end page home -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE: ABOUT
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-about">
+  <section class="about-hero">
+    <div class="container">
+      <div class="about-grid">
+        <div>
+          <div class="label-tag">Our Mission</div>
+          <h2 class="section-h2 teal">Built to Solve the UK's £25.1 Billion Fashion Returns Crisis</h2>
+          <div class="section-divider divider-teal"></div>
+          <p class="about-para">TailorFlow was born from a clear, observed failure: UK e-commerce fashion brands process returns at a cost of £10–£20 per item, with 93% of those returns caused by avoidable size and fit issues. The industry treats fit corrections as a reactive, post-purchase burden  with no integrated system to resolve fit before the first-mile delivery.</p>
+          <p class="about-para">Our platform transforms fashion fulfillment from a reactive "buy-to-return" model into a proactive, AI-powered Fit Orchestration Infrastructure. We don't just manage returns faster  we prevent them entirely by intercepting orders at checkout, translating customer fit intent into precise technical job sheets, and routing garments to a vetted network of local tailoring hubs before dispatch.</p>
+          <p class="about-para">Founded by Nikunj Patel  combining a decade of industrial procurement expertise with a Computer Science background  TailorFlow applies pharmaceutical-grade quality control to the fashion industry's most expensive flaw: the "Fit Gap."</p>
+          <div class="about-tags">
+            <div class="feature-tag">Checkout-to-Stitch Orchestration</div>
+            <div class="feature-tag">AITE Semantic Translation</div>
+            <div class="feature-tag">Pre-Dispatch Modification Buffer</div>
+            <div class="feature-tag">Canonical Alteration Schema (CAS)</div>
+            <div class="feature-tag">Fit Intelligence Analytics (APIM)</div>
+            <div class="feature-tag">SLA-Managed Micro-Hub Network</div>
+            <div class="feature-tag">GDPR · EPR 2025 Compliant</div>
+            <div class="feature-tag">Patent-Pending IP Portfolio</div>
+          </div>
+        </div>
+        <div>
+          <div class="founder-card">
+            <div class="founder-tag">Founder &amp; CEO</div>
+            <h4>Nikunj Patel</h4>
+            <div class="founder-title">Computer Science · Industrial Procurement · International Business · Supply Chain Leader</div>
+            <p>Over nine years of industrial procurement experience at Acme Pharmaceuticals, specialising in sourcing, contract negotiation, supplier relationship management (SRM), and ERP-driven logistics. Nikunj combines this with a Master of International Business (University of Lincoln) and a Bachelor of Computer Science.</p>
+            <p>Nikunj directs both the technical architecture of TailorFlow's CSOL and AITE modules and the operational partner network  ensuring the platform applies pharmaceutical-grade reliability to fashion's fragmented tailoring supply chain. His procurement background directly informs the 24–48h SLA guarantee and the platform's industrial-grade quality control.</p>
+            <button class="btn-primary" onclick="showPage('contact')">Contact Founder →</button>
+          </div>
+
+          <div class="founder-card">
+            <div class="founder-tag">The Platform</div>
+            <h4>TailorFlow</h4>
+            <div class="founder-title">
+              Fit Orchestration · Return Prevention · Circular Economy Compliance
+            </div>
+            <p>TailorFlow is currently at TRL-7 with a functional prototype validated in the London city cluster. The platform has achieved 95% AITE mapping accuracy, sub-200ms checkout latency, and a 40% reduction in bracketing behaviour in controlled pilot groups.</p>
+            <p>Target: 500 institutional merchants by Year 5 with ARR exceeding £3 million, while preventing millions of garments from entering UK landfills annually and supporting brands' EPR 2025 and Digital Product Passport (DPP 2027) compliance obligations.</p>
+          <button class="btn-primary" onclick="showPage('market')">view Market →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page about -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE: PLATFORM
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-platform">
+  <section class="section-dark" style="padding-top:clamp(60px,8vw,100px);">
+    <div class="container">
+      <div class="label-tag">Platform Architecture</div>
+      <h2 class="section-h2 white">Five Proprietary Modules. One Invisible Custom-Fit Layer.</h2>
+      <div class="section-divider divider-teal"></div>
+
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-num">TRL-7</div>
+          <div class="kpi-lbl">Current Technology Readiness Level</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-num">95%</div>
+          <div class="kpi-lbl">AITE Semantic Mapping Accuracy</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-num">&lt;200ms</div>
+          <div class="kpi-lbl">Checkout Interaction Latency</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-num">24–48h</div>
+          <div class="kpi-lbl">SLA-Managed Turnaround Time</div>
+        </div>
+      </div>
+
+      <div class="platform-grid">
+
+        <!-- MODULE A -->
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <img src="t8.jpg" style="width:100%;height:100%;object-fit:cover;"
+              onerror="this.style.display='none';this.parentNode.querySelector('.platform-card-img-placeholder').style.display='flex'">
+            <div class="platform-card-img-placeholder" style="display:none;">🛒</div>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Element A</div>
+            <h3>CSOL  Checkout Orchestration</h3>
+            <p>Transaction-integrated framework capturing fit adjustments at the point of purchase. Automatically transforms customer intent into structured tailoring instructions embedded in the original transaction record.</p>
+            <div class="more-text">Built using Shopify Checkout UI Extensions and WooCommerce Blocks  maintaining sub-second page load benchmarks while capturing structured alteration metadata (hems, waists, sleeves) without checkout friction.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Expand ↓</button>
+          </div>
+        </div>
+
+        <!-- MODULE B -->
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <img src="t9.jpg" style="width:100%;height:100%;object-fit:cover;"
+              onerror="this.style.display='none';this.parentNode.querySelector('.platform-card-img-placeholder').style.display='flex'">
+            <div class="platform-card-img-placeholder" style="display:none;">🤖</div>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Element B</div>
+            <h3>PRFCI  Return Prevention</h3>
+            <p>Proactive logistics mechanism that intervenes before dispatch to resolve size and fit mismatches. The "Modification Buffer" routes garments from the warehouse to a tailoring micro-hub upstream of final delivery.</p>
+            <div class="more-text">Establishes a proprietary "Preventative Logistics" workflow distinct from standard reverse-logistics or post-purchase repair systems  treating fit correction as a fulfillment step, not a returns step.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Expand ↓</button>
+          </div>
+        </div>
+
+        <!-- MODULE C -->
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <img src="t10.jpg" style="width:100%;height:100%;object-fit:cover;"
+              onerror="this.style.display='none';this.parentNode.querySelector('.platform-card-img-placeholder').style.display='flex'">
+            <div class="platform-card-img-placeholder" style="display:none;">🔤</div>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Element C</div>
+            <h3>AITE  Semantic Translation</h3>
+            <p>Machine learning engine converting ambiguous, subjective customer language into quantifiable production parameters  mapping qualitative descriptors to standardised technical specifications.</p>
+            <div class="more-text">Patent protection extends to the ML algorithms that map qualitative descriptors to standardised technical specifications, ensuring low-error communication between the merchant's storefront and the tailor's workshop.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Expand ↓</button>
+          </div>
+        </div>
+
+        <!-- MODULE D -->
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <img src="t11.jpg" style="width:100%;height:100%;object-fit:cover;"
+              onerror="this.style.display='none';this.parentNode.querySelector('.platform-card-img-placeholder').style.display='flex'">
+            <div class="platform-card-img-placeholder" style="display:none;">📊</div>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Element D</div>
+            <h3>APIM  Fit Intelligence</h3>
+            <p>Data-driven layer aggregating recurring alteration requests to identify systemic fit deficiencies across specific SKUs. Transforms service records into predictive merchandising signals.</p>
+            <div class="more-text">Provides diagnostic data back to brand design teams to fix the root cause of returns  misaligned master patterns. Allows brands to adjust future manufacturing specs based on real-world body data.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Expand ↓</button>
+          </div>
+        </div>
+
+        <!-- MODULE E -->
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <img src="t12.jpg" style="width:100%;height:100%;object-fit:cover;"
+              onerror="this.style.display='none';this.parentNode.querySelector('.platform-card-img-placeholder').style.display='flex'">
+            <div class="platform-card-img-placeholder" style="display:none;">🏭</div>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Element E</div>
+            <h3>ICFEL  Custom-Fit Layer</h3>
+            <p>Invisible Custom-Fit Enablement Layer for pre-dispatch modification. Intercepts order signals at WMS level, routing garments to the "Modification Buffer" without disrupting high-speed packing lines.</p>
+            <div class="more-text">Establishes a "Hybrid Retail Model" that bridges the gap between mass production and individual personalization  providing bespoke-quality fit at scalable e-commerce price points.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Expand ↓</button>
+          </div>
+        </div>
+
+        <!-- MODULE  CAS -->
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <img src="t13.jpg" style="width:100%;height:100%;object-fit:cover;"
+              onerror="this.style.display='none';this.parentNode.querySelector('.platform-card-img-placeholder').style.display='flex'">
+            <div class="platform-card-img-placeholder" style="display:none;">📋</div>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Schema</div>
+            <h3>CAS  Canonical Alteration</h3>
+            <p>Proprietary data schema eliminating the fragmentation of artisan labour. Ensures a tailoring partner in London delivers the exact same technical precision as one in Leicester or Manchester.</p>
+            <div class="more-text">The CAS forms the backbone of TailorFlow's "industrial logic"  a dictionary that translates customer intent to needle-work instructions, maintained as a trade secret with controlled access under strict NDAs.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Expand ↓</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</div><!-- end page platform -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE: MARKET
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-market">
+  <section class="section-dark" style="padding-top:clamp(60px,8vw,100px);">
+    <div class="container">
+      <div class="label-tag">Market Analysis</div>
+      <h2 class="section-h2 white">The UK's £25.1B Returns Crisis Creates an Urgent Market Imperative</h2>
+      <div class="section-divider divider-teal"></div>
+
+      <div class="market-kpi">
+        <div class="mkt-card">
+          <div class="mkt-num">£68.7B</div>
+          <div class="mkt-lbl">UK Apparel Market Revenue  projected by end 2025, with online fashion accounting for 73% of total fashion spend.</div>
+          <div class="mkt-source">UK Fashion Industry Report 2025</div>
+        </div>
+        <div class="mkt-card">
+          <div class="mkt-num">£357M</div>
+          <div class="mkt-lbl">Total Addressable Market for TailorFlow across D2C, multicultural, luxury, enterprise and sustainable fashion sectors.</div>
+          <div class="mkt-source">TailorFlow Market Analysis</div>
+        </div>
+        <div class="mkt-card">
+          <div class="mkt-num">22.64%</div>
+          <div class="mkt-lbl">Projected CAGR for UK sustainable fashion market, driven by EPR mandates and consumer demand for circular retail.</div>
+          <div class="mkt-source">UK Sustainable Fashion Report</div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">TailorFlow TAM by Sector (£M)</div>
+          <div class="chart-sub">Annual addressable market by customer segment</div>
+          <div class="chart-wrap"><canvas id="chartSector"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Returns Crisis Breakdown</div>
+          <div class="chart-sub">Root causes of UK fashion returns</div>
+          <div class="chart-wrap"><canvas id="chartRootCause"></canvas></div>
+        </div>
+      </div>
+
+      <div class="chart-card-full">
+        <div class="chart-title">Competitive Positioning Radar</div>
+        <div class="chart-sub">TailorFlow vs. market competitors across key capability dimensions</div>
+        <div class="chart-wrap-lg"><canvas id="chartRadar"></canvas></div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">TailorFlow Revenue Projections (Year 1–5)</div>
+          <div class="chart-sub">Annual revenue growth trajectory (£)</div>
+          <div class="chart-wrap"><canvas id="chartGrowth"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Platform Performance vs. Competitors</div>
+          <div class="chart-sub">Capability score comparison across key metrics</div>
+          <div class="chart-wrap"><canvas id="chartPerf"></canvas></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div><!-- end page market -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE: PRICING
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-pricing">
+  <section class="section-dark" style="padding-top:clamp(60px,8vw,100px);">
+    <div class="container">
+      <div class="label-tag">Pricing Plans</div>
+      <h2 class="section-h2 white">Transparent Pricing. Built for Fashion Merchants of Every Scale.</h2>
+      <div class="section-divider divider-teal"></div>
+      <p class="para-dark" style="max-width:640px;margin-bottom:clamp(36px,5vw,64px);">Every TailorFlow plan replaces the £10–£20 "returns tax" per garment with a proactive, revenue-retaining service fee. Choose the tier that matches your volume  and start converting potential refunds into finalized, custom-fit sales.</p>
+
+      <div class="pricing-grid">
+
+        <!-- INDEPENDENT -->
+        <div class="price-card">
+          <div class="price-tier">Independent</div>
+          <h3>Boutique</h3>
+          <p class="desc">For independent boutiques and multicultural occasionwear brands entering proactive fit orchestration.</p>
+          <div class="price-amount"><span>£</span>199</div>
+          <div class="price-period">per month · billed monthly</div>
+          <div class="price-divider"></div>
+          <ul class="price-features">
+            <li><span class="chk">✓</span>Shopify & WooCommerce checkout UI extension</li>
+            <li><span class="chk">✓</span>Basic job-sheet generation (CAS schema)</li>
+            <li><span class="chk">✓</span>Partner routing engine access</li>
+            <li><span class="chk">✓</span>Up to 500 alteration jobs/month</li>
+            <li><span class="chk">✓</span>Email support & onboarding guide</li>
+            <li><span class="chk">✓</span>GDPR-compliant data handling</li>
+          </ul>
+          <button class="price-btn price-btn-outline" onclick="showPage('contact')">Get Started →</button>
+        </div>
+
+        <!-- PROFESSIONAL -->
+        <div class="price-card featured">
+          <div class="price-tier">Professional</div>
+          <h3>Growth Brand</h3>
+          <p class="desc">For mid-market D2C brands seeking enterprise-grade fit orchestration and APIM analytics.</p>
+          <div class="price-amount"><span>£</span>499</div>
+          <div class="price-period">per month · billed monthly</div>
+          <div class="price-divider"></div>
+          <ul class="price-features">
+            <li><span class="chk">✓</span>Shopify Plus / WooCommerce Enterprise integration</li>
+            <li><span class="chk">✓</span>Automated SLA tracking & partner scorecarding</li>
+            <li><span class="chk">✓</span>APIM Fit Intelligence dashboards</li>
+            <li><span class="chk">✓</span>Up to 3,000 alteration jobs/month</li>
+            <li><span class="chk">✓</span>Priority support & dedicated onboarding</li>
+            <li><span class="chk">✓</span>EPR waste mitigation reporting</li>
+            <li><span class="chk">✓</span>Multicultural & occasionwear modules</li>
+          </ul>
+          <button class="price-btn price-btn-teal" onclick="showPage('contact')">Start Free Pilot →</button>
+        </div>
+
+        <!-- ENTERPRISE -->
+        <div class="price-card">
+          <div class="price-tier">Enterprise</div>
+          <h3>Custom</h3>
+          <p class="desc">For Tier-1 department stores, global marketplaces, and fashion conglomerates requiring full WMS integration.</p>
+          <div class="price-amount"><span>£</span>1,500<span style="font-size:18px">/avg</span></div>
+          <div class="price-period">per month · custom pricing</div>
+          <div class="price-divider"></div>
+          <ul class="price-features">
+            <li><span class="chk">✓</span>Full API access for custom WMS stacks</li>
+            <li><span class="chk">✓</span>White-label deployment infrastructure</li>
+            <li><span class="chk">✓</span>Multi-city cluster management</li>
+            <li><span class="chk">✓</span>Advanced EPR & DPP reporting tools</li>
+            <li><span class="chk">✓</span>Fit-Intelligence data licensing (APIM)</li>
+            <li><span class="chk">✓</span>Dedicated account manager & SLA guarantee</li>
+          </ul>
+          <button class="price-btn price-btn-outline" onclick="showPage('contact')">Request Quote →</button>
+        </div>
+
+      </div>
+
+      <!-- TRANSACTION FEES -->
+      <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:36px;margin-bottom:48px;">
+        <div class="label-tag" style="margin-bottom:16px;">Transaction Fees</div>
+        <h3 style="font-family:var(--display);color:var(--white);font-size:22px;font-weight:800;margin-bottom:12px;">Per-Alteration "Attach Rate" Fees</h3>
+        <p class="para-dark" style="font-size:14px;margin-bottom:24px;max-width:680px;">In addition to subscriptions, TailorFlow charges a platform fee on every modification executed. This aligns our growth directly with the merchant's success.</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+          <div style="background:rgba(27,111,216,0.05);border:1px solid rgba(27,111,216,0.15);border-radius:12px;padding:20px;">
+            <div style="font-family:var(--mono);font-size:9px;color:var(--teal);letter-spacing:2px;margin-bottom:8px;">STANDARD</div>
+            <div style="font-family:var(--display);font-size:28px;font-weight:800;color:var(--white);">£1.50</div>
+            <div style="color:var(--txt-secondary);font-size:13px;">per altered order · high-volume tier</div>
+          </div>
+          <div style="background:rgba(27,111,216,0.05);border:1px solid rgba(27,111,216,0.15);border-radius:12px;padding:20px;">
+            <div style="font-family:var(--mono);font-size:9px;color:var(--teal);letter-spacing:2px;margin-bottom:8px;">PREMIUM</div>
+            <div style="font-family:var(--display);font-size:28px;font-weight:800;color:var(--white);">£3.50</div>
+            <div style="color:var(--txt-secondary);font-size:13px;">per altered order · standard volume</div>
+          </div>
+          <div style="background:rgba(27,111,216,0.05);border:1px solid rgba(27,111,216,0.15);border-radius:12px;padding:20px;">
+            <div style="font-family:var(--mono);font-size:9px;color:var(--teal);letter-spacing:2px;margin-bottom:8px;">BRIDAL / LUXURY</div>
+            <div style="font-family:var(--display);font-size:28px;font-weight:800;color:var(--white);">15–20%</div>
+            <div style="color:var(--txt-secondary);font-size:13px;">commission on tailoring service value</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="label-tag" style="margin-bottom:20px;">Frequently Asked Questions</div>
+      <div class="faq-wrap">
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">
+            <h4>How does TailorFlow integrate with my Shopify store?</h4>
+            <div class="faq-icon">+</div>
+          </div>
+          <div class="faq-body">TailorFlow integrates via a native Shopify Checkout UI Extension  no custom code required. The extension is installed in under 30 minutes and presents product-specific alteration options based on SKU attributes, capturing structured alteration metadata without affecting your checkout conversion rate or sub-second page load benchmarks.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">
+            <h4>What is the 24–48 hour SLA and how is it enforced?</h4>
+            <div class="faq-icon">+</div>
+          </div>
+          <div class="faq-body">The SLA is enforced through real-time capacity monitoring and automated job redirection. If a tailoring hub approaches its throughput limit, jobs are automatically rerouted to the next nearest certified partner. Partner contracts include SLA penalty clauses, and TailorFlow's dashboard provides real-time milestone tracking for both merchants and end customers.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">
+            <h4>How does TailorFlow help with EPR 2025 compliance?</h4>
+            <div class="faq-icon">+</div>
+          </div>
+          <div class="faq-body">TailorFlow provides merchants with audited primary data on returns reduction and landfill prevention  directly supporting reporting requirements under the UK Textiles Pact and Extended Producer Responsibility (EPR) scheme. Every modification is logged as a digital event, ready for export into your sustainability disclosure reports.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">
+            <h4>What types of garments and alterations are supported?</h4>
+            <div class="faq-icon">+</div>
+          </div>
+          <div class="faq-body">TailorFlow currently supports hemming, waist adjustments, tapering, and sleeve shortening across 10+ garment categories including trousers, occasionwear, ethnic wear (Kurta/Kameez), formalwear, and denim. Specialist modules for multicultural wear, bridal, and suiting include domain-specific tailoring logic and QA protocols.</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div><!-- end page pricing -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE: CONTACT
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-contact">
+  <section class="section-dark" style="padding-top:clamp(60px,8vw,100px);">
+    <div class="container">
+      <div class="label-tag">Get in Touch</div>
+      <h2 class="section-h2 white">Start Your Pilot. Prevent Returns. Protect Margins.</h2>
+      <div class="section-divider divider-teal"></div>
+
+      <div class="contact-grid">
+        <div>
+          <p class="contact-left-para">Whether you're a D2C brand losing margin to returns, a multicultural retailer solving the Length vs. Shoulder paradox, or an enterprise seeking white-label fit infrastructure  TailorFlow has a solution built for your scale.</p>
+          <p class="contact-left-para">Book a 30-minute discovery call with our founder and get a customised ROI report showing how much TailorFlow can save your brand annually in return-processing costs.</p>
+
+          <div class="contact-item">
+            <div class="contact-icon">I</div>
+            <div class="contact-item-text">
+              <strong>Email</strong>
+              <span>tailorflowuk@outlook.com</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">II</div>
+            <div class="contact-item-text">
+              <strong>Phone</strong>
+              <span>+44 7404 727345</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">III</div>
+            <div class="contact-item-text">
+              <strong>Location</strong>
+              <span>Crawley, UK · London City Cluster Operations</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">IV</div>
+            <div class="contact-item-text">
+              <strong>Response Time</strong>
+              <span>Within 24 hours · Monday to Friday</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="contact-form-card">
+            <h3>Book a Discovery Call</h3>
+            <form onsubmit="handleSubmit(event)">
+              <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input class="form-ctrl" type="text" placeholder="Your full name" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Business Email</label>
+                <input class="form-ctrl" type="email" placeholder="your@brand.com" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Brand / Company</label>
+                <input class="form-ctrl" type="text" placeholder="Your brand name" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Monthly Orders (approximate)</label>
+                <select class="form-ctrl">
+                  <option value="">Select your order volume</option>
+                  <option>Under 1,000 orders/month</option>
+                  <option>1,000 – 5,000 orders/month</option>
+                  <option>5,000 – 50,000 orders/month</option>
+                  <option>50,000 – 100,000 orders/month</option>
+                  <option>100,000+ orders/month</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Sector</label>
+                <select class="form-ctrl">
+                  <option value="">Select your sector</option>
+                  <option>D2C / Independent Fashion Brand</option>
+                  <option>Multicultural / Ethnic Wear</option>
+                  <option>Luxury / Occasionwear</option>
+                  <option>High Street / Omnichannel Retail</option>
+                  <option>Enterprise / Department Store</option>
+                  <option>3PL / Logistics Provider</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Message (optional)</label>
+                <textarea class="form-ctrl ta" placeholder="Tell us about your current returns challenge..."></textarea>
+              </div>
+              <button class="form-submit" type="submit">Send Message &amp; Book Demo →</button>
+            </form>
+            <div id="formSuccess" style="display:none;margin-top:16px;background:rgba(27,111,216,0.1);border:1px solid rgba(27,111,216,0.3);border-radius:8px;padding:14px;color:var(--teal);font-family:var(--mono);font-size:12px;letter-spacing:0.5px;">
+              ✓ Thank you! Our team will contact you within 24 hours.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page contact -->
+
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="footer-logo">Tailor<span style="color:var(--blue-soft)">flow</span></span>
+        <p>The UK's first B2B fashion-operations middleware that solves the £25.1 billion returns crisis by fixing garment fit before it ships. By combining checkout-integrated orchestration, AI-driven semantic translation, and a distributed network of certified tailoring hubs, TailorFlow converts potential refunds into finalized, custom-fit sales  delivering "Ready-to-Wear" perfection to consumers and sustainable profitability to digital merchants.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Platform</h5>
+        <a onclick="showPage('platform')">CSOL Checkout Engine</a>
+        <a onclick="showPage('platform')">AITE Semantic Translation</a>
+        <a onclick="showPage('platform')">Pre-Dispatch Buffer</a>
+        <a onclick="showPage('platform')">APIM Fit Intelligence</a>
+        <a onclick="showPage('platform')">CAS Canonical Schema</a>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <a onclick="showPage('about')">About TailorFlow</a>
+        <a onclick="showPage('market')">Market Analysis</a>
+        <a onclick="showPage('pricing')">Pricing &amp; Plans</a>
+        <a onclick="showPage('contact')">Book a Demo</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 <span>TailorFlow</span> · Crawley, UK · GDPR Compliant · EPR 2025 Aligned · DPP 2027 Ready</p>
+      <p><span>tailorflow.co.uk</span> · Custom Tailoring Management Solution · B2B Fit Orchestration Middleware · Confidential</p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════════ JAVASCRIPT ═══════════ -->
+<script>
+/* ─── PAGE NAV ───────────────────────────────── */
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-links button').forEach(b=>b.classList.remove('active'));
+  const pg=document.getElementById('page-'+name);
+  if(pg){pg.classList.add('active');}
+  const btn=document.getElementById('nav-'+name);
+  if(btn){btn.classList.add('active');}
+  window.scrollTo({top:0,behavior:'instant'});
+  if(name==='market'&&!window.marketChartsLoaded){initMarketCharts();window.marketChartsLoaded=true;}
+}
+
+function toggleCard(btn){
+  const card=btn.closest('.platform-card');
+  const isOpen=card.classList.contains('open');
+  document.querySelectorAll('.platform-card').forEach(c=>{
+    c.classList.remove('open');
+    const eb=c.querySelector('.expand-btn');
+    if(eb){eb.textContent=eb.textContent.includes('Expand')?'Expand ↓':'Learn More ↓';}
+  });
+  if(!isOpen){
+    card.classList.add('open');
+    btn.textContent=btn.textContent.includes('Expand')?'Collapse ↑':'Show Less ↑';
+  }
+}
+
+function toggleFAQ(el){
+  el.parentElement.classList.toggle('open');
+}
+
+function closeMobile(){
+  document.getElementById('mobileNav').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+
+document.getElementById('hamburger').addEventListener('click',function(){
+  this.classList.toggle('open');
+  document.getElementById('mobileNav').classList.toggle('open');
+});
+
+function handleSubmit(e){
+  e.preventDefault();
+  document.getElementById('formSuccess').style.display='block';
+}
+
+/* ─── CHART THEME ────────────────────────────── */
+const BLUE='rgba(27,111,216,1)';
+const BLUE2='rgba(27,111,216,0.75)';
+const BLUE3='rgba(27,111,216,0.4)';
+const NAVY='rgba(22,76,164,0.9)';
+const NAVY2='rgba(91,159,232,0.7)';
+const GRID='rgba(255,255,255,0.05)';
+const MUTED='rgba(122,172,216,0.8)';
+
+Chart.defaults.font.family="'IBM Plex Mono', monospace";
+Chart.defaults.font.size=11;
+Chart.defaults.color=MUTED;
+
+/* ─── MARKET CHARTS ──────────────────────────── */
+function initMarketCharts(){
+  // TAM by Sector
+  new Chart(document.getElementById('chartSector').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:['D2C & Independent Fashion','Sustainable & Circular','Multicultural & Ethnic','Luxury & Occasionwear','Enterprise Retailers'],
+      datasets:[{
+        label:'TAM (£M annually)',
+        data:[288,40.8,13.75,8.98,6],
+        backgroundColor:[BLUE,BLUE2,BLUE3,'rgba(27,111,216,0.25)',NAVY2],
+        borderRadius:5,barPercentage:0.6
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:GRID},ticks:{color:MUTED,callback:v=>'£'+v+'M'}},y:{grid:{display:false},ticks:{color:MUTED,font:{size:10}}}}}
+  });
+
+  // Returns Root Cause
+  new Chart(document.getElementById('chartRootCause').getContext('2d'),{
+    type:'doughnut',
+    data:{
+      labels:['Fit & Size Issues (93%)','Wrong Item Sent (4%)','Damaged/Faulty (2%)','Changed Mind (1%)'],
+      datasets:[{
+        data:[93,4,2,1],
+        backgroundColor:[BLUE,'rgba(27,111,216,0.6)',BLUE3,'rgba(22,76,164,0.5)'],
+        borderColor:['rgba(27,111,216,0.9)','rgba(27,111,216,0.65)','rgba(27,111,216,0.45)','rgba(22,76,164,0.6)'],
+        borderWidth:1.5
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:10,font:{size:10}}}}}
+  });
+
+  // Radar Competitive
+  new Chart(document.getElementById('chartRadar').getContext('2d'),{
+    type:'radar',
+    data:{
+      labels:['Checkout Integration','Pre-Delivery Interception','Semantic Translation','SLA-Managed Speed','EPR/DPP Compliance','Fit Intelligence Data'],
+      datasets:[
+        {label:'TailorFlow',data:[5,5,5,5,5,5],backgroundColor:'rgba(27,111,216,0.12)',borderColor:BLUE,borderWidth:2,pointBackgroundColor:BLUE},
+        {label:'SOJO (UK)',data:[1,1,2,2,3,2],backgroundColor:'rgba(91,159,232,0.07)',borderColor:NAVY2,borderWidth:1.5,pointBackgroundColor:NAVY2},
+        {label:'The Seam (UK)',data:[1,1,3,1,3,2],backgroundColor:'rgba(100,180,255,0.06)',borderColor:'rgba(100,180,255,0.5)',borderWidth:1.5,pointBackgroundColor:'rgba(100,180,255,0.5)'},
+        {label:'ZigZag/Rebound',data:[2,1,1,4,2,1],backgroundColor:'rgba(200,180,100,0.06)',borderColor:'rgba(200,180,100,0.5)',borderWidth:1.5,pointBackgroundColor:'rgba(200,180,100,0.5)'},
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:14,font:{size:10}}}},scales:{r:{backgroundColor:'rgba(27,111,216,0.01)',grid:{color:GRID},pointLabels:{color:MUTED,font:{size:10}},ticks:{display:false},min:0,max:5}}}
+  });
+
+  // Revenue Projections
+  new Chart(document.getElementById('chartGrowth').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:['Year 1','Year 2','Year 3','Year 4','Year 5'],
+      datasets:[
+        {label:'Annual Revenue (£)',data:[73484,304090,1096368,2172914,3058885],backgroundColor:NAVY,borderRadius:5,barPercentage:0.55},
+        {type:'line',label:'Net Profit (£)',data:[16925,88168,243954,574112,784250],borderColor:BLUE,borderWidth:2,tension:0.4,pointBackgroundColor:BLUE,fill:false}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:12,font:{size:10}}}},scales:{x:{grid:{color:GRID},ticks:{color:MUTED}},y:{grid:{color:GRID},ticks:{color:MUTED,callback:v=>'£'+v.toLocaleString()}}}}
+  });
+
+  // Performance Comparison
+  new Chart(document.getElementById('chartPerf').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:['Checkout Native','Pre-Delivery Fit','Semantic AI','SLA 24-48h','EPR Compliance','Fit Data Loop'],
+      datasets:[
+        {label:'TailorFlow',data:[98,100,95,97,100,95],backgroundColor:BLUE2,borderRadius:5,barPercentage:0.35},
+        {label:'Market Average',data:[5,0,10,20,15,5],backgroundColor:NAVY2,borderRadius:5,barPercentage:0.35}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:14,font:{size:10}}}},scales:{x:{grid:{color:GRID},ticks:{color:MUTED,font:{size:9}}},y:{grid:{color:GRID},ticks:{color:MUTED,callback:v=>v+' pts'}}}}
+  });
+}
+</script>
+</body>
+</html>
