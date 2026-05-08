@@ -1565,22 +1565,25 @@ footer{background:var(--bg-black);border-top:1px solid rgba(27,111,216,0.1);padd
         <div>
           <div class="contact-form-card">
             <h3>Book a Discovery Call</h3>
-            <form onsubmit="handleSubmit(event)">
+            <form id="contactForm" onsubmit="handleSubmit(event)">
+              <input type="hidden" name="access_key" value="de32c453-4119-44b0-9cf2-3c395a328ea5">
+              <input type="hidden" name="subject" value="New Demo Request – TailorFlow">
+              <input type="hidden" name="from_name" value="TailorFlow Website">
               <div class="form-group">
                 <label class="form-label">Full Name</label>
-                <input class="form-ctrl" type="text" placeholder="Your full name" required>
+                <input class="form-ctrl" type="text" name="name" placeholder="Your full name" required>
               </div>
               <div class="form-group">
                 <label class="form-label">Business Email</label>
-                <input class="form-ctrl" type="email" placeholder="your@brand.com" required>
+                <input class="form-ctrl" type="email" name="email" placeholder="your@brand.com" required>
               </div>
               <div class="form-group">
                 <label class="form-label">Brand / Company</label>
-                <input class="form-ctrl" type="text" placeholder="Your brand name" required>
+                <input class="form-ctrl" type="text" name="company" placeholder="Your brand name" required>
               </div>
               <div class="form-group">
                 <label class="form-label">Monthly Orders (approximate)</label>
-                <select class="form-ctrl">
+                <select class="form-ctrl" name="monthly_orders">
                   <option value="">Select your order volume</option>
                   <option>Under 1,000 orders/month</option>
                   <option>1,000 – 5,000 orders/month</option>
@@ -1591,7 +1594,7 @@ footer{background:var(--bg-black);border-top:1px solid rgba(27,111,216,0.1);padd
               </div>
               <div class="form-group">
                 <label class="form-label">Sector</label>
-                <select class="form-ctrl">
+                <select class="form-ctrl" name="sector">
                   <option value="">Select your sector</option>
                   <option>D2C / Independent Fashion Brand</option>
                   <option>Multicultural / Ethnic Wear</option>
@@ -1603,12 +1606,15 @@ footer{background:var(--bg-black);border-top:1px solid rgba(27,111,216,0.1);padd
               </div>
               <div class="form-group">
                 <label class="form-label">Message (optional)</label>
-                <textarea class="form-ctrl ta" placeholder="Tell us about your current returns challenge..."></textarea>
+                <textarea class="form-ctrl ta" name="message" placeholder="Tell us about your current returns challenge..."></textarea>
               </div>
-              <button class="form-submit" type="submit">Send Message &amp; Book Demo →</button>
+              <button class="form-submit" type="submit" id="formBtn">Send Message &amp; Book Demo →</button>
             </form>
             <div id="formSuccess" style="display:none;margin-top:16px;background:rgba(27,111,216,0.1);border:1px solid rgba(27,111,216,0.3);border-radius:8px;padding:14px;color:var(--teal);font-family:var(--mono);font-size:12px;letter-spacing:0.5px;">
               ✓ Thank you! Our team will contact you within 24 hours.
+            </div>
+            <div id="formError" style="display:none;margin-top:16px;background:rgba(216,50,50,0.1);border:1px solid rgba(216,50,50,0.3);border-radius:8px;padding:14px;color:#e06060;font-family:var(--mono);font-size:12px;letter-spacing:0.5px;">
+              ✗ Something went wrong. Please try again or email us directly.
             </div>
           </div>
         </div>
@@ -1692,9 +1698,31 @@ document.getElementById('hamburger').addEventListener('click',function(){
   document.getElementById('mobileNav').classList.toggle('open');
 });
 
-function handleSubmit(e){
+async function handleSubmit(e){
   e.preventDefault();
-  document.getElementById('formSuccess').style.display='block';
+  const btn=document.getElementById('formBtn');
+  const form=document.getElementById('contactForm');
+  const successEl=document.getElementById('formSuccess');
+  const errorEl=document.getElementById('formError');
+  btn.disabled=true;
+  btn.textContent='Sending…';
+  errorEl.style.display='none';
+  const data=new FormData(form);
+  try{
+    const res=await fetch('https://api.web3forms.com/submit',{method:'POST',body:data});
+    const json=await res.json();
+    if(json.success){
+      successEl.style.display='block';
+      form.reset();
+      btn.textContent='Sent ✓';
+    }else{
+      throw new Error(json.message||'Submission failed');
+    }
+  }catch(err){
+    errorEl.style.display='block';
+    btn.disabled=false;
+    btn.textContent='Send Message & Book Demo →';
+  }
 }
 
 /* ─── CHART THEME ────────────────────────────── */
