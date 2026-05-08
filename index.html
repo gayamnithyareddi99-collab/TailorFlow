@@ -862,6 +862,35 @@ footer{background:var(--bg-black);border-top:1px solid rgba(27,111,216,0.1);padd
   .chart-wrap-lg{height:220px;}
   .chart-title{font-size:14px;}
 }
+
+/* ─── TRANSACTION FEES GRID ───────────────────────────── */
+.txn-fees-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
+}
+.txn-fee-card{
+  background:rgba(27,111,216,0.05);
+  border:1px solid rgba(27,111,216,0.15);
+  border-radius:12px;padding:20px;
+}
+.txn-fee-label{
+  font-family:var(--mono);font-size:9px;color:var(--teal);
+  letter-spacing:2px;margin-bottom:8px;text-transform:uppercase;
+}
+.txn-fee-price{
+  font-family:var(--display);font-size:clamp(22px,5vw,28px);
+  font-weight:800;color:var(--white);margin-bottom:6px;
+}
+.txn-fee-desc{color:var(--txt-secondary);font-size:13px;line-height:1.5;}
+@media(max-width:768px){
+  .txn-fees-grid{grid-template-columns:1fr;}
+  .txn-fee-card{display:flex;align-items:center;gap:16px;padding:16px 18px;}
+  .txn-fee-card>div{flex:1;}
+  .txn-fee-label{margin-bottom:0;}
+  .txn-fee-price{font-size:26px;white-space:nowrap;}
+}
+@media(max-width:480px){
+  .txn-fee-card{flex-direction:column;align-items:flex-start;gap:6px;}
+}
 </style>
 </head>
 <body>
@@ -1456,25 +1485,25 @@ footer{background:var(--bg-black);border-top:1px solid rgba(27,111,216,0.1);padd
       </div>
 
       <!-- TRANSACTION FEES -->
-      <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:36px;margin-bottom:48px;">
+      <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:clamp(20px,4vw,36px);margin-bottom:48px;">
         <div class="label-tag" style="margin-bottom:16px;">Transaction Fees</div>
         <h3 style="font-family:var(--display);color:var(--white);font-size:22px;font-weight:800;margin-bottom:12px;">Per-Alteration "Attach Rate" Fees</h3>
         <p class="para-dark" style="font-size:14px;margin-bottom:24px;max-width:680px;">In addition to subscriptions, TailorFlow charges a platform fee on every modification executed. This aligns our growth directly with the merchant's success.</p>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
-          <div style="background:rgba(27,111,216,0.05);border:1px solid rgba(27,111,216,0.15);border-radius:12px;padding:20px;">
-            <div style="font-family:var(--mono);font-size:9px;color:var(--teal);letter-spacing:2px;margin-bottom:8px;">STANDARD</div>
-            <div style="font-family:var(--display);font-size:28px;font-weight:800;color:var(--white);">£1.50</div>
-            <div style="color:var(--txt-secondary);font-size:13px;">per altered order · high-volume tier</div>
+        <div class="txn-fees-grid">
+          <div class="txn-fee-card">
+            <div class="txn-fee-label">STANDARD</div>
+            <div class="txn-fee-price">£1.50</div>
+            <div class="txn-fee-desc">per altered order · high-volume tier</div>
           </div>
-          <div style="background:rgba(27,111,216,0.05);border:1px solid rgba(27,111,216,0.15);border-radius:12px;padding:20px;">
-            <div style="font-family:var(--mono);font-size:9px;color:var(--teal);letter-spacing:2px;margin-bottom:8px;">PREMIUM</div>
-            <div style="font-family:var(--display);font-size:28px;font-weight:800;color:var(--white);">£3.50</div>
-            <div style="color:var(--txt-secondary);font-size:13px;">per altered order · standard volume</div>
+          <div class="txn-fee-card">
+            <div class="txn-fee-label">PREMIUM</div>
+            <div class="txn-fee-price">£3.50</div>
+            <div class="txn-fee-desc">per altered order · standard volume</div>
           </div>
-          <div style="background:rgba(27,111,216,0.05);border:1px solid rgba(27,111,216,0.15);border-radius:12px;padding:20px;">
-            <div style="font-family:var(--mono);font-size:9px;color:var(--teal);letter-spacing:2px;margin-bottom:8px;">BRIDAL / LUXURY</div>
-            <div style="font-family:var(--display);font-size:28px;font-weight:800;color:var(--white);">15–20%</div>
-            <div style="color:var(--txt-secondary);font-size:13px;">commission on tailoring service value</div>
+          <div class="txn-fee-card">
+            <div class="txn-fee-label">BRIDAL / LUXURY</div>
+            <div class="txn-fee-price">15–20%</div>
+            <div class="txn-fee-desc">commission on tailoring service value</div>
           </div>
         </div>
       </div>
